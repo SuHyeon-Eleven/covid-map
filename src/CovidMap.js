@@ -20,6 +20,10 @@ import {
 } from "./area/all_area";
 import axios from "axios";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import {changeTheme} from "./redux/action";
+import {Button} from "react-bootstrap";
+
 // 코로나 단계별 색상
 const fillColor = ["#4088da", "#ffb911", "#fc7001", "#e60000"];
 
@@ -102,11 +106,14 @@ const StyleBox = styled.div`
   border-radius: 5px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   width: 800px;
-  padding: 10px; 
+  padding: 10px;
 `;
+
 function CovidInfo({ area,date, todayNum, level }) {
+  const theme = useSelector((state) => state.theme);
+
   return (
-    <StyleBox>
+    <StyleBox style={{background: theme === "light" ? "white" : "darkgrey"}}>
       {area !== "" && (
         <>
           <h2>{area} 코로나 정보 ({date} 기준)</h2>
@@ -117,16 +124,19 @@ function CovidInfo({ area,date, todayNum, level }) {
     </StyleBox>
   );
 }
+
 const StyleMap = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-`
+`;
+
 function CovidMap() {
+  const dispatch = useDispatch();
+  const theme = useSelector((state) => state.theme);
+
   const [covidData, setCovidData] = useState(null);
-  const [updatedDate,setUpdatedDate] = useState('');
   const [selectArea, setSelectArea] = useState({
     area: "",
     level: 0,
@@ -136,9 +146,9 @@ function CovidMap() {
     console.log(covidData);
   }, [covidData]);
 
-  const fetchData = async() => {
-    let response =  await axios.post("http://localhost:5000/covidData")
-    setCovidData(response.data)
+  const fetchData = async () => {
+    let response = await axios.post("http://localhost:5000/covidData")
+    setCovidData(response.data);
     // .then((response) => {
     //   if (response.data) {
     //     setCovidData(response.data);
@@ -159,7 +169,7 @@ function CovidMap() {
     return () => {
       clearInterval(timer);
     }
-  },[])
+  }, []);
   
 
   const handlerAreaSelect = (area) => {
@@ -170,9 +180,12 @@ function CovidMap() {
     });
   };
 
+  const handleTheme = () => {
+    dispatch(changeTheme(theme === "light" ? "dark" : "light"));
+  }
+
   return (
-    <StyleMap>
-      <h1>대한민국 코로나 현황</h1>
+    <StyleMap style={{background: theme === "light" ? "white" : "grey"}}>
       {covidData === null ? (
         <p>Loading...</p>
       ) : (

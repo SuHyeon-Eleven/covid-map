@@ -22,7 +22,7 @@ all_area_no = {
     '경남': 16,
     '제주': 17,
 }
-
+# ?
 # 해당 URL 코드에서 자바스크립트에 담겨있는 거리두기 단계 변수 정규표현식 사용해서 가져오기
 def getTodayCovidLevel():
     response = requests.get('http://ncov.mohw.go.kr/regSocdisBoardView.do')

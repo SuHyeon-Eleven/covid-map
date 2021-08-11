@@ -141,9 +141,20 @@ function CovidMap() {
     area: "",
     level: 0,
   });
+  const [allNum,setAllNum] = useState()
 
   useEffect(() => {
+    if (covidData){
     console.log(covidData);
+
+    const data = covidData.data
+    const numArr =Object.keys(data).map(key => {
+      return data[key].num
+    })
+    const allNum = numArr.reduce((a,b)=> a+b)
+
+    setAllNum(allNum)
+  }
   }, [covidData]);
 
   const fetchData = async () => {
@@ -190,6 +201,7 @@ function CovidMap() {
         <p>Loading...</p>
       ) : (
         <>
+          <p>총 확신자 수 : {allNum}</p>
           <CovidInfo
             area={selectArea.area}
             date={covidData.updated_data}
